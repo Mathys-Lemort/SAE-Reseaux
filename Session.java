@@ -1,33 +1,59 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
+import java.io.PrintWriter;
 import java.net.Socket;
-import java.nio.Buffer;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+
+
+
 
 public class Session extends Thread {
-    // private ServerSocket server;
     private Socket socketClient;
-    private BufferedReader buffeReader;
+    private PrintWriter printWriter;
+    private String nomutil;
+    private Server server;
 
-    public Session( Socket socketc) {
+
+    public Session(Server server, Socket socketc, String nomutil) {
         // this.server = server;
         this.socketClient = socketc;
+        this.nomutil = nomutil;
+        this.server = server;
+        try {
+            this.printWriter = new PrintWriter(socketClient.getOutputStream());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
+    public PrintWriter getPrintWriter() {
+        return printWriter;
+    }
     @Override
     public void run() {
+        // read constantly the input stream
         try {
-            buffeReader = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
-            String message = buffeReader.readLine();
-            while (message != null) {
-                System.out.println(message);
-                message = buffeReader.readLine();
+            while (true) {
+                String output=new BufferedReader(new InputStreamReader(socketClient.getInputStream())).readLine();
+                if (output.equals("/quit")) {
+                    break;
+                }
+                String message = output;
+                for (Session session : server.getSessions()) {
+                    session.getPrintWriter().println(message);
+                    session.getPrintWriter().flush();
+                }
             }
-            buffeReader.close();
-            socketClient.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                socketClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
     
