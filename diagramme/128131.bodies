@@ -1,26 +1,14 @@
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-
-public class Server {
-    private ServerSocket socketServer;
-    private List<Session> sessions;
-    
-    public Server() {
+class Server
+!!!128899.java!!!	Server()
         this.sessions = new ArrayList<Session>();
         try {
             this.socketServer= new ServerSocket(4444);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public List<Session> getSessions() {
+!!!129027.java!!!	getSessions() : Session
         return sessions;
-    }
-    public void demarrer() {
+!!!129155.java!!!	demarrer() : void
         while (true) {
             try {
                 Socket socketClient = socketServer.accept();
@@ -32,11 +20,7 @@ public class Server {
                 e.printStackTrace();
             }
         }
-    }
-    public static void main(String[] args) {
+!!!129283.java!!!	main(inout args : String [[]]) : void
             Server server = new Server();
             server.demarrer();
         
-    }
-
-}

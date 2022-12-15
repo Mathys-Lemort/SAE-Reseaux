@@ -1,26 +1,13 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-
-public class Client {
-    private boolean connected ;
-    private Socket socketClient;
-
-    public Client() {
+class Client
+!!!128003.java!!!	Client()
         this.connected = false;
-    }
-    public boolean isConnected() {
+!!!128131.java!!!	isConnected() : boolean
         return connected;
-    }
-    public Socket getSocketClient() {
+!!!128259.java!!!	getSocketClient() : Socket
         return socketClient;
-    }
-    public void setConnected(boolean connected) {
+!!!128387.java!!!	setConnected(inout connected : boolean) : void
         this.connected = connected;
-    }
-    public void connect() {
+!!!128515.java!!!	connect() : void
         try {
             this.socketClient = new Socket("localhost", 4444);
             this.connected = true;
@@ -36,19 +23,13 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
             }
-    }
-    public void disconnect() {
+!!!128643.java!!!	disconnect() : void
         try {
             this.socketClient.close();
             this.connected = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    public static void main(String[] args) {
+!!!128771.java!!!	main(inout args : String [[]]) : void
         Client client = new Client();
         client.connect();
-    }
-   
-    
-}

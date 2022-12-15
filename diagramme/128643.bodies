@@ -1,19 +1,7 @@
-import java.io.IOException;
-import java.net.Socket;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
-public class ThreadLec extends Thread{
-    private Client client;
-    private BufferedReader bufferedReader;
-    private String message;
-    
-    public ThreadLec(Client client) {
+class ThreadLec
+!!!130051.java!!!	ThreadLec(inout client : Client)
         this.client = client;
-    }
-
-    @Override
-    public void run() {
+!!!130179.java!!!	run() : void
         // when a message is received, print it
         try {
             bufferedReader = new BufferedReader(new InputStreamReader(this.client.getSocketClient().getInputStream()));
@@ -24,6 +12,3 @@ public class ThreadLec extends Thread{
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    
-}
