@@ -1,0 +1,38 @@
+class Session
+!!!129411.java!!!	Session(inout server : Server, inout socketc : Socket, in nomutil : String)
+        // this.server = server;
+        this.socketClient = socketc;
+        this.nomutil = nomutil;
+        this.server = server;
+        try {
+            this.printWriter = new PrintWriter(socketClient.getOutputStream());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+!!!129539.java!!!	getPrintWriter() : PrintWriter
+        return printWriter;
+!!!129667.java!!!	run() : void
+        // read constantly the input stream
+        try {
+            while (true) {
+                String output=new BufferedReader(new InputStreamReader(socketClient.getInputStream())).readLine();
+                if (output.equals("/quit")) {
+                    break;
+                }
+                String message = output;
+                for (Session session : server.getSessions()) {
+                    session.getPrintWriter().println(message);
+                    session.getPrintWriter().flush();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                socketClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }

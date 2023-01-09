@@ -1,0 +1,35 @@
+class Client
+!!!128003.java!!!	Client()
+        this.connected = false;
+!!!128131.java!!!	isConnected() : boolean
+        return connected;
+!!!128259.java!!!	getSocketClient() : Socket
+        return socketClient;
+!!!128387.java!!!	setConnected(inout connected : boolean) : void
+        this.connected = connected;
+!!!128515.java!!!	connect() : void
+        try {
+            this.socketClient = new Socket("localhost", 4444);
+            this.connected = true;
+            System.out.println("connexion établie");
+            System.out.println("Choisir un nom d'utilisateur");
+            // lit la ligne suivante pour le nom d'utilisateur
+            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            String nomutil = in.readLine();
+            ThreadEcr ecr=new ThreadEcr(this,nomutil);
+            ThreadLec lec=new ThreadLec(this);
+            ecr.start();
+            lec.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            }
+!!!128643.java!!!	disconnect() : void
+        try {
+            this.socketClient.close();
+            this.connected = false;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+!!!128771.java!!!	main(inout args : String [[]]) : void
+        Client client = new Client();
+        client.connect();

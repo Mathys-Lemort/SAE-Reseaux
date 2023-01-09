@@ -1,0 +1,25 @@
+class ThreadEcr
+!!!129795.java!!!	ThreadEcr(inout client : Client, in nomutil : String)
+        this.client = client;
+        this.nomutil = nomutil;
+!!!129923.java!!!	run() : void
+        // read constantly the input stream
+        try {
+            printWriter = new PrintWriter(this.client.getSocketClient().getOutputStream());
+            while (this.client.isConnected()) {
+                String input =new BufferedReader(new InputStreamReader(System.in)).readLine();
+                if (input.equals("/quit")) {
+                    this.client.setConnected(false);
+                }
+                message = nomutil + " : " + input;
+                printWriter.println(message);
+                printWriter.flush();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            this.client.disconnect();
+            
+        }
+
