@@ -1,4 +1,7 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -7,6 +10,7 @@ import java.util.List;
 public class Server {
     private ServerSocket socketServer;
     private List<Session> sessions;
+    private List<String> listeNoms = new ArrayList<String>();
     
     public Server() {
         this.sessions = new ArrayList<Session>();
@@ -25,7 +29,24 @@ public class Server {
             try {
                 Socket socketClient = socketServer.accept();
                 System.out.println("connexion d’un client");
-                Session session = new Session(this,socketClient, "util");
+                PrintWriter printWriter = new PrintWriter(socketClient.getOutputStream());
+                printWriter.println("Confirmez votre nom d'utilisateur");
+                printWriter.flush();
+                String nomutil ="";
+                while (nomutil.equals("") && listeNoms.contains(nomutil)){
+                    BufferedReader in = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
+                    nomutil = in.readLine();
+                    if (listeNoms.contains(nomutil)) {
+                        printWriter.println("Nom d'utilisateur déjà utilisé");
+                        printWriter.flush();
+                    }
+                    else{
+                        System.out.println(listeNoms);
+                        printWriter.println("Bienvenue "+nomutil);
+                        printWriter.flush();
+                        listeNoms.add(nomutil);}
+                }
+                Session session = new Session(this,socketClient, nomutil);
                 session.start();
                 sessions.add(session);
             } catch (IOException e) {

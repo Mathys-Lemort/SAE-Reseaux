@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Client {
     private boolean connected ;
@@ -20,16 +21,27 @@ public class Client {
     public void setConnected(boolean connected) {
         this.connected = connected;
     }
+    
     public void connect() {
         try {
             this.socketClient = new Socket("localhost", 4444);
             this.connected = true;
             System.out.println("connexion établie");
-            System.out.println("Choisir un nom d'utilisateur");
-            // lit la ligne suivante pour le nom d'utilisateur
-            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-            String nomutil = in.readLine();
-            ThreadEcr ecr=new ThreadEcr(this,nomutil);
+            PrintWriter printWriter = new PrintWriter(socketClient.getOutputStream());
+            BufferedReader in = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
+            String recu = in.readLine();
+            System.out.println(recu);
+            recu = "Nom d'utilisateur déjà utilisé";
+            while (recu.equals("Nom d'utilisateur déjà utilisé")) {
+                Scanner sc = new Scanner(System.in);
+                String nom = sc.nextLine();
+                printWriter.println(nom);
+                printWriter.flush();
+                System.out.println("aaz");
+                recu = in.readLine();
+                System.out.println(recu);
+            }
+            ThreadEcr ecr=new ThreadEcr(this, recu);
             ThreadLec lec=new ThreadLec(this);
             ecr.start();
             lec.start();
