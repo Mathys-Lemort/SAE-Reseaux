@@ -22,13 +22,28 @@ public class ThreadEcr extends Thread{
             printWriter = new PrintWriter(this.client.getSocketClient().getOutputStream());
             while (this.client.isConnected()) {
                 String input =new BufferedReader(new InputStreamReader(System.in)).readLine();
+                String[] commandes = new String[] {"/nbuser", "/users", "uptime", "/help"};
                 if (input.equals("/quit")) {
                     this.client.setConnected(false);
                 }
-                message = nomutil + " : " + input;
-                printWriter.println(message);
-                printWriter.flush();
+                // si commence par @
+                else if (input.startsWith("@")){
+                    message = input;
+                    printWriter.println(message);
+                    printWriter.flush();
+                }
+                
+                else if (!java.util.Arrays.asList(commandes).contains(input)){
+                    message = nomutil + " : " + input;
+                    printWriter.println(message);
+                    printWriter.flush();
+                }
+                else{
+                    printWriter.println(input);
+                    printWriter.flush();
+                }
             }
+            
         } catch (IOException e) {
             e.printStackTrace();
         }

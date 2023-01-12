@@ -27,7 +27,7 @@ public class Server {
             e.printStackTrace();
         }
     }
-    
+
     public List<String> getListeNoms() {
         return listeNoms;
     }

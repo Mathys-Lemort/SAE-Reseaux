@@ -28,4 +28,22 @@ public class Salon {
         sessions.add(session);
         nbutil++;
     }
+    public String getNomsUtils(){
+        String noms = "";
+        for (Session session : sessions){
+            noms += session.getNomUtil()+" | ";
+        }
+        return noms;
+    }
+    public Server getServer() {
+        return server;
+    }
+    public int getNbUtil(){
+        return nbutil;
+    }
+
+    public Time getUptime(){
+        Time uptime = new Time(System.currentTimeMillis() - heureDeb.getTime());
+        return uptime;
+    }
 }
