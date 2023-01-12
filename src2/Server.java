@@ -9,9 +9,7 @@ import java.util.List;
 
 public class Server {
     private ServerSocket socketServer;
-    private List<Session> sessions= new ArrayList<Session>();
     private List<String> listeNoms = new ArrayList<String>();
-    private List<String> listeNomsSalons = new ArrayList<String>();
     private List<Salon> listeSalons = new ArrayList<Salon>();
 
     
@@ -29,18 +27,12 @@ public class Server {
             e.printStackTrace();
         }
     }
-
-    public List<Session> getSessions() {
-        return sessions;
-    }
+    
     public List<String> getListeNoms() {
         return listeNoms;
     }
     public List<Salon> getListeSalons() {
         return listeSalons;
-    }
-    public List<String> getListeNomsSalons() {
-        return listeNomsSalons;
     }
     public void demarrer() {
         while (true) {

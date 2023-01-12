@@ -66,8 +66,7 @@ public class ThreadConn extends Thread{
         }
         Salon salon = server.getListeSalons().get(Integer.parseInt(numSalon));
         Session session = new Session(salon,socketClient, nomutil);
-        session.start();        
-        server.getSessions().add(session);
+        session.start();
         salon.ajoutSession(session);
         }
         catch (Exception e){

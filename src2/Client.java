@@ -38,9 +38,7 @@ public class Client {
                 printWriter.println(nom);
                 printWriter.flush();
                 recu = in.readLine();
-                if (recu.equals("Nom d'utilisateur déjà utilisé")) {
-                    System.out.println(recu);
-                }
+                System.out.println(recu);
             }
             String nom=recu;
             recu = in.readLine();
