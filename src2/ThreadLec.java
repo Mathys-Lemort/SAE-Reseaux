@@ -3,7 +3,7 @@ import java.net.Socket;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class ThreadLec extends Thread{
+public class ThreadLec implements Runnable{
     private Client client;
     private BufferedReader bufferedReader;
     private String message;
@@ -19,10 +19,13 @@ public class ThreadLec extends Thread{
             bufferedReader = new BufferedReader(new InputStreamReader(this.client.getSocketClient().getInputStream()));
             while (this.client.isConnected()) {
                 message = bufferedReader.readLine();
+                if (message == null) {
+                    break;
+                }
                 System.out.println(message);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException finConnexion) {
+            System.out.println(Couleur.PURPLE_BOLD+"Au revoir!"+Couleur.WHITE);
         }
     }
     

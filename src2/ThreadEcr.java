@@ -4,13 +4,11 @@ import java.net.Socket;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class ThreadEcr extends Thread{
+public class ThreadEcr implements Runnable{
     private Client client;
-    private String nomutil;
     
-    public ThreadEcr(Client client, String nomutil) {
+    public ThreadEcr(Client client) {
         this.client = client;
-        this.nomutil = nomutil;
     }
 
     @Override
@@ -22,8 +20,8 @@ public class ThreadEcr extends Thread{
                 String message = "";
                 String input =new BufferedReader(new InputStreamReader(System.in)).readLine();
                 String[] commandes = new String[] {"/nbuser", "/users", "uptime", "/help"};
-                if (input.equals("/quit")) {
-                    this.client.setConnected(false);
+                if (input.equals("/quit") || input.equals("null")) {
+                    break;
                 }
                 // si commence par @
                 else if (input.startsWith("@")){
@@ -33,7 +31,7 @@ public class ThreadEcr extends Thread{
                 }
                 
                 else if (!java.util.Arrays.asList(commandes).contains(input)){
-                    message = nomutil + " : " + input;
+                    message = input;
                     printWriter.println(message);
                     printWriter.flush();
                 }
@@ -44,11 +42,9 @@ public class ThreadEcr extends Thread{
             }
             
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(Couleur.RED_BOLD+"Erreur de connexion"+Couleur.WHITE);
         }
-        finally {
-            this.client.disconnect();
-            
+        finally {            
         }
 
 }

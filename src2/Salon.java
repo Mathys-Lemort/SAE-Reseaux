@@ -28,10 +28,11 @@ public class Salon {
         sessions.add(session);
         nbutil++;
     }
-    public String getNomsUtils(){
+    public String getNomsUtils(String nomutil){
         String noms = "";
         for (Session session : sessions){
-            noms += session.getNomUtil()+" | ";
+            if (!session.getNomUtil().equals(nomutil)){
+            noms += " | "+session.getNomUtil();}
         }
         return noms;
     }
@@ -45,5 +46,17 @@ public class Salon {
     public Time getUptime(){
         Time uptime = new Time(System.currentTimeMillis() - heureDeb.getTime());
         return uptime;
+    }
+
+    public void removeSession(Session session) {
+        sessions.remove(session);
+        nbutil--;
+    }
+
+    public void fermer(){
+        for (Session session : sessions){
+            session.fermer();
+        }
+        sessions.clear();
     }
 }

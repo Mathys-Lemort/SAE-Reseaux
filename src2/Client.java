@@ -8,6 +8,8 @@ import java.util.Scanner;
 public class Client {
     private boolean connected ;
     private Socket socketClient;
+    private Thread threadLec;
+    private Thread threadEcr;
 
     public Client() {
         this.connected = false;
@@ -26,51 +28,47 @@ public class Client {
         try {
             this.socketClient = new Socket("localhost", 4444);
             this.connected = true;
-            System.out.println("connexion établie");
+            System.out.println(Couleur.PURPLE_BOLD+"Connexion établie"+Couleur.WHITE);
             PrintWriter printWriter = new PrintWriter(socketClient.getOutputStream());
             BufferedReader in = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
             String recu = in.readLine();
             System.out.println(recu);
-            recu = "Nom d'utilisateur déjà utilisé";
-            while (recu.equals("Nom d'utilisateur déjà utilisé")) {
-                Scanner sc = new Scanner(System.in);
+            recu = Couleur.RED_BOLD+"Nom d'utilisateur déjà utilisé"+Couleur.WHITE;
+            Scanner sc = new Scanner(System.in);
+            while (recu.equals(Couleur.RED_BOLD+"Nom d'utilisateur déjà utilisé"+Couleur.WHITE) || 
+            recu.equals(Couleur.RED_BOLD+"Nom d'utilisateur invalide"+Couleur.WHITE)) {
                 String nom = sc.nextLine();
                 printWriter.println(nom);
                 printWriter.flush();
                 recu = in.readLine();
                 System.out.println(recu);
             }
-            String nom=recu;
             recu = in.readLine();
             System.out.println(recu);
             recu = in.readLine();
             System.out.println(recu);
-            recu = in.readLine();
-            System.out.println(recu);
-            recu = "Salon inexistant";
-            while (recu.equals("Salon inexistant") || recu.equals("Entrez un nombre")) {
-                Scanner sc = new Scanner(System.in);
+            recu = Couleur.RED_BOLD+"Salon inexistant"+Couleur.WHITE;
+            while (recu.equals(Couleur.RED_BOLD+"Salon inexistant"+Couleur.WHITE) || recu.equals(Couleur.RED_BOLD+"Entrez un nombre"+Couleur.WHITE) 
+            || recu.equals(Couleur.RED_BOLD+"Salon inexistant ou nombre invalide"+Couleur.WHITE)) {
+                try{
                 int numSalon = sc.nextInt();
                 printWriter.println(numSalon);
                 printWriter.flush();
                 recu = in.readLine();
                 System.out.println(recu);
+                recu = in.readLine();
+                System.out.println(recu);}
+                catch (Exception e) {
+                    System.out.println(Couleur.RED_BOLD+"Entrez un nombre"+Couleur.WHITE);
+                }
             }
-            ThreadEcr ecr=new ThreadEcr(this, nom);
-            ThreadLec lec=new ThreadLec(this);
-            ecr.start();
-            lec.start();
+            threadEcr=new Thread(new ThreadEcr(this));
+            threadLec=new Thread(new ThreadLec(this));
+            threadEcr.start();
+            threadLec.start(); 
         } catch (IOException e) {
             e.printStackTrace();
             }
-    }
-    public void disconnect() {
-        try {
-            this.socketClient.close();
-            this.connected = false;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
     public static void main(String[] args) {
         Client client = new Client();

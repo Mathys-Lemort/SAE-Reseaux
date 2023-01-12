@@ -12,22 +12,31 @@ public class Server {
     private ServerSocket socketServer;
     private List<String> listeNoms = new ArrayList<String>();
     private List<Salon> listeSalons = new ArrayList<Salon>();
-    private OutputStream out;
-    private boolean ouvert;
+    private int connEnCours = 0;
 
     
     public Server() {
         try {
             this.socketServer= new ServerSocket(4444);
-            this.ouvert = true;
-            
+            Salon salon1 = new Salon(this,"Salon 1");
+            listeSalons.add(salon1);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    public OutputStream getOut() {
-        return out;
+    public void ajouterClient(Socket socketClient) {
+        this.connEnCours++;
+        Thread threadConn = new Thread(new ThreadConn(this,socketClient));
+        threadConn.start();
+    }
+    public int getConnEnCours() {
+        return connEnCours;
+    }
+    public void ajtConnEnCours() {
+        connEnCours++;
+    }
+    public void finConnEnCours(){
+        connEnCours--;
     }
     public List<String> getListeNoms() {
         return listeNoms;
@@ -36,29 +45,48 @@ public class Server {
         return listeSalons;
     }
     public boolean ouvert() {
-        return ouvert;
+        return !(socketServer.isClosed());
     }
+
     public void fermer() {
-        this.ouvert = false;
-        //affiche a tout le monde fermeture en rouge + ferme les clients et fini par interrompre demarrer
+        try {
+            for (Salon salon : listeSalons) {
+                salon.fermer();
+            }
+            socketServer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void reconnecter(Session session) {
+        Thread threadConn = new Thread(new ThreadReconn(this,session));
+        threadConn.start();
     }
     public void demarrer() {
         Thread ecoute = new Thread(new ThreadEcouteServ(this));
         ecoute.start();
-        while (this.ouvert) {
-            if (!this.ouvert) {
-                break;
-            }
+        while (!socketServer.isClosed()){
             try{
+                if (socketServer.isClosed()) {
+                    break;
+                }
                 Socket socketClient = socketServer.accept();
-                System.out.println("connexion d’un client");
-                ThreadConn threadConn = new ThreadConn(this,socketClient);
-                threadConn.start();}
-            catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(Couleur.CYAN_BOLD+"Connexion d’un client"+Couleur.WHITE);
+                while (connEnCours >= 3){
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                ajouterClient(socketClient);
             }
+            catch (IOException e) {
+                break;
+                }
+            }
+        
         }
-    }
     public static void main(String[] args) {
             Server server = new Server();
             server.demarrer();
