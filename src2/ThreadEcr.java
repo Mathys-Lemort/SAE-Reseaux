@@ -6,8 +6,6 @@ import java.io.InputStreamReader;
 
 public class ThreadEcr extends Thread{
     private Client client;
-    private PrintWriter printWriter;
-    private String message;
     private String nomutil;
     
     public ThreadEcr(Client client, String nomutil) {
@@ -19,8 +17,9 @@ public class ThreadEcr extends Thread{
     public void run() {
         // read constantly the input stream
         try {
-            printWriter = new PrintWriter(this.client.getSocketClient().getOutputStream());
+            PrintWriter printWriter = new PrintWriter(this.client.getSocketClient().getOutputStream());
             while (this.client.isConnected()) {
+                String message = "";
                 String input =new BufferedReader(new InputStreamReader(System.in)).readLine();
                 String[] commandes = new String[] {"/nbuser", "/users", "uptime", "/help"};
                 if (input.equals("/quit")) {

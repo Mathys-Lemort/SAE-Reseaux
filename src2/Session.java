@@ -64,7 +64,7 @@ public class Session extends Thread {
                     String nom = parts[0].substring(1);
                     for (Session session : salon.getSessions()){
                         if (nom.equals(session.getNomUtil())){
-                        session.getPrintWriter().println(Couleur.YELLOW_BOLD+"[message privé de "+send + "] " + message);
+                        session.getPrintWriter().println(Couleur.YELLOW_BOLD+"[message privé de "+send + "] " + message+Couleur.WHITE);
                         session.getPrintWriter().flush();}
                     }
                 }
