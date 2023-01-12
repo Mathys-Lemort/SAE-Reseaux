@@ -1,8 +1,4 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -71,7 +67,7 @@ public class Server {
                     break;
                 }
                 Socket socketClient = socketServer.accept();
-                System.out.println(Couleur.CYAN_BOLD+"Connexion d’un client"+Couleur.WHITE);
+                System.out.println(Couleur.BLUE_BOLD+"Connexion d’un client"+Couleur.WHITE);
                 while (connEnCours >= 3){
                     try {
                         Thread.sleep(10000);

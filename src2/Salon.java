@@ -1,4 +1,6 @@
 import java.sql.Time;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,14 +9,14 @@ public class Salon {
     private Server server;
     private String nomSalon;
     private Integer nbutil;
-    private Time heureDeb;
+    private Instant heureDeb;
 
     public Salon(Server server, String nomSalon) {
         this.sessions = new ArrayList<Session>();
         this.server = server;
         this.nomSalon = nomSalon;
         this.nbutil = 0;
-        this.heureDeb = new Time(System.currentTimeMillis());
+        this.heureDeb = Instant.now();
         
     }
 
@@ -31,8 +33,7 @@ public class Salon {
     public String getNomsUtils(String nomutil){
         String noms = "";
         for (Session session : sessions){
-            if (!session.getNomUtil().equals(nomutil)){
-            noms += " | "+session.getNomUtil();}
+            noms += " | "+session.getNomUtil();
         }
         return noms;
     }
@@ -43,8 +44,10 @@ public class Salon {
         return nbutil;
     }
 
-    public Time getUptime(){
-        Time uptime = new Time(System.currentTimeMillis() - heureDeb.getTime());
+    public String getUptime(){
+        Instant end = Instant.now();
+        Duration duration = Duration.between(heureDeb, end);
+        String uptime = duration.toHours()+":"+duration.toMinutes()+":"+duration.getSeconds();
         return uptime;
     }
 

@@ -13,7 +13,7 @@ public class ThreadEcouteServ implements Runnable{
         // read constantly the input stream waiting for commands
         while (server.ouvert()){
             try{
-            System.out.println("Attente de commande");
+            System.out.println(Couleur.CYAN_BOLD+"Entrez votre commande:"+Couleur.WHITE);
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
             String input = in.readLine();
             if (input.equals("/quit")){
@@ -24,6 +24,7 @@ public class ThreadEcouteServ implements Runnable{
                 String nom = in.readLine();
                 Salon salon = new Salon(server,nom);
                 server.getListeSalons().add(salon);
+                System.out.println(Couleur.GREEN_BOLD+"Salon ajouté"+Couleur.WHITE);
             }
             else if (input.equals("/salons")){
                 System.out.println(Couleur.CYAN_BOLD+"Salons disponibles: "+Couleur.WHITE);
@@ -45,7 +46,8 @@ public class ThreadEcouteServ implements Runnable{
                     }
                 }
                 if (salon != null){
-                server.getListeSalons().remove(salon);}
+                server.getListeSalons().remove(salon);
+                System.out.println(Couleur.YELLOW_BOLD+"Salon supprimé"+Couleur.WHITE);}
                 else{
                     System.out.println(Couleur.RED_BOLD+"Salon inexistant"+Couleur.WHITE);
                 }

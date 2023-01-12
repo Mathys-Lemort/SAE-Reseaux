@@ -14,10 +14,9 @@ public class ThreadLec implements Runnable{
 
     @Override
     public void run() {
-        // when a message is received, print it
         try {
             bufferedReader = new BufferedReader(new InputStreamReader(this.client.getSocketClient().getInputStream()));
-            while (this.client.isConnected()) {
+            while (client.getSocketClient().isConnected()) {
                 message = bufferedReader.readLine();
                 if (message == null) {
                     break;
