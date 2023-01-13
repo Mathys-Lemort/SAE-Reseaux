@@ -43,6 +43,7 @@ public class Session extends Thread {
         if (this.salon != null) {
             server = this.salon.getServer();
             salon.removeSession(this);
+            this.salon = null;
         }
         try{
         PrintWriter printWriter = new PrintWriter(this.getSocketClient().getOutputStream());
@@ -50,24 +51,21 @@ public class Session extends Thread {
         Scanner sc = new Scanner(System.in);
         printWriter.println(Couleur.YELLOW_BOLD+"Voulez-vous vous déconnecter du serveur(/quit) ou vous reconnecter à un salon(/reco) ?"+Couleur.WHITE);
         printWriter.flush();
-        String commande = sc.nextLine();
-        while (!(commande.equals("/quit")) && !(commande.equals("/reco"))){
-            commande = sc.nextLine();
-            printWriter.println(commande);
+        String commande = "";
+        while (!(commande.startsWith("/quit")) && !(commande.startsWith("/reco"))){
+            printWriter.println(Couleur.YELLOW_BOLD+"Entrez votre commande"+Couleur.WHITE);
             printWriter.flush();
-            if (!(sc.nextLine().equals("/quit")) && !(sc.nextLine().equals("/reco"))){
+            commande = in.readLine();
+            if (!(commande.startsWith("/quit")) && !(commande.startsWith("/reco"))){
                 printWriter.println(Couleur.RED_BOLD+"Commande inconnue"+Couleur.WHITE);
                 printWriter.flush();
             }
             }
-        if (commande.equals("/quit")){
-            this.fermer();}
-        else if (commande.equals("/reco")){
+        if (commande.startsWith("/quit")){
+            this.fermer(server);}
+        else if (commande.startsWith("/reco")){
             server.reconnecter(this);
-            String recu = in.readLine();
-            System.out.println(recu);
-            recu = in.readLine();
-            System.out.println(recu);
+            String recu = "";
             while (!(recu.startsWith(Couleur.PURPLE_BOLD+"Pour"))){
                 try{
                 String numSalon = sc.nextLine();
@@ -88,9 +86,9 @@ public class Session extends Thread {
                 printWriter.println(Couleur.RED_BOLD+"Erreur de connexion"+Couleur.WHITE);
             }
     }
-    public void fermer(){
-        this.salon = null;
-        printWriter.println(Couleur.RED_BOLD+"Fermeture forcée du serveur"+Couleur.WHITE);
+    public void fermer(Server server){
+        server.getListeNoms().remove(this.nomutil);
+        printWriter.println(Couleur.RED_BOLD+"Fermeture de la connexion"+Couleur.WHITE);
         printWriter.flush();
         printWriter.close();
         try {

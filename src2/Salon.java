@@ -47,7 +47,9 @@ public class Salon {
     public String getUptime(){
         Instant end = Instant.now();
         Duration duration = Duration.between(heureDeb, end);
-        String uptime = duration.toHours()+":"+duration.toMinutes()+":"+duration.getSeconds();
+        // secondes modulo 60
+        long sec = duration.getSeconds() % 60;
+        String uptime = duration.toHours()+":"+duration.toMinutes()+":"+sec;
         return uptime;
     }
 
@@ -58,7 +60,9 @@ public class Salon {
 
     public void fermer(){
         for (Session session : sessions){
-            session.fermer();
+            session.getPrintWriter().println(Couleur.RED_BOLD+"Le salon a été fermé par l'administrateur");
+            session.getPrintWriter().flush();
+            session.fermer(this.server);
         }
         sessions.clear();
     }

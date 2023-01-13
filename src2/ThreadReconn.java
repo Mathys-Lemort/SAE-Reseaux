@@ -33,7 +33,7 @@ public class ThreadReconn implements Runnable {
         printWriter.flush();
         String numSalon = "";
         boolean trouve = false;
-        while (! trouve){
+        while (!trouve){
             numSalon = in.readLine();
             try{
                 List<String> listeChiffres = new ArrayList<>();
@@ -72,7 +72,7 @@ public class ThreadReconn implements Runnable {
         server.finConnEnCours();
         }
         catch (Exception e){
-            e.printStackTrace();
+            System.out.println(Couleur.RED_BOLD+"Erreur lors de la connexion"+Couleur.WHITE);
         }
     }
 }

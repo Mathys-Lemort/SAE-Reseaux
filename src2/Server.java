@@ -9,6 +9,7 @@ public class Server {
     private List<String> listeNoms = new ArrayList<String>();
     private List<Salon> listeSalons = new ArrayList<Salon>();
     private int connEnCours = 0;
+    private List<Thread> listeThreads = new ArrayList<Thread>();
 
     
     public Server() {
@@ -23,6 +24,7 @@ public class Server {
     public void ajouterClient(Socket socketClient) {
         this.connEnCours++;
         Thread threadConn = new Thread(new ThreadConn(this,socketClient));
+        this.listeThreads.add(threadConn);
         threadConn.start();
     }
     public int getConnEnCours() {
@@ -43,9 +45,12 @@ public class Server {
     public boolean ouvert() {
         return !(socketServer.isClosed());
     }
-
+    
     public void fermer() {
         try {
+            for (Thread thread : listeThreads) {
+                thread.interrupt();
+            }
             for (Salon salon : listeSalons) {
                 salon.fermer();
             }
@@ -56,6 +61,7 @@ public class Server {
     }
     public void reconnecter(Session session) {
         Thread threadConn = new Thread(new ThreadReconn(this,session));
+        this.listeThreads.add(threadConn);
         threadConn.start();
     }
     public void demarrer() {

@@ -15,7 +15,8 @@ public class ThreadEcr implements Runnable{
         // read constantly the input stream
         try {
             PrintWriter printWriter = new PrintWriter(this.client.getSocketClient().getOutputStream());
-            while (client.getSocketClient().isConnected()) {
+            while (!(client.isClosed())){
+                System.out.println(client.isClosed());
                 String input =new BufferedReader(new InputStreamReader(System.in)).readLine();
                 if (input == null) {
                     break;

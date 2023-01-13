@@ -65,7 +65,6 @@ public class ThreadEcouteServ implements Runnable{
         }
         System.out.println(Couleur.RED_BOLD+"Fermeture du serveur"+Couleur.WHITE);
         server.fermer();
-            
         }
     }
 

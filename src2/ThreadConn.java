@@ -91,7 +91,7 @@ public class ThreadConn implements Runnable{
         server.finConnEnCours();
         }
         catch (Exception e){
-            e.printStackTrace();
+            System.out.println(Couleur.RED_BOLD+"Erreur lors de la connexion"+Couleur.WHITE);
         }
     }
 }

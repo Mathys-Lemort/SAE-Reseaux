@@ -15,7 +15,9 @@ public class Client {
     public Socket getSocketClient() {
         return socketClient;
     }
-    
+    public boolean isClosed() {
+        return socketClient.isClosed();
+    }
     public void connect() {
         try {
             this.socketClient = new Socket("localhost", 4444);
@@ -54,8 +56,8 @@ public class Client {
             threadEcr = new Thread(new ThreadEcr(this));
             threadLec.start();
             threadEcr.start();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println(Couleur.RED_BOLD+"Erreur lors de la connexion"+Couleur.WHITE);
             }
     }
     public static void main(String[] args) {
