@@ -18,12 +18,21 @@ public class ThreadLec implements Runnable{
             bufferedReader = new BufferedReader(new InputStreamReader(this.client.getSocketClient().getInputStream()));
             while (! (client.isClosed())) {
                 message = bufferedReader.readLine();
-                if (message == null) {
+                if (message.equals(Couleur.RED_BOLD+"Fermeture de la connexion"+Couleur.WHITE)){
                     break;
                 }
                 System.out.println(message);
             }
-        } catch (IOException finConnexion) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally{
+            try {
+                client.getSocketClient().close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            client.getThreadEcr().interrupt();
             System.out.println(Couleur.PURPLE_BOLD+"Au revoir!"+Couleur.WHITE);
         }
     }

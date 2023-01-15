@@ -18,6 +18,12 @@ public class Client {
     public boolean isClosed() {
         return socketClient.isClosed();
     }
+    public Thread getThreadLec() {
+        return threadLec;
+    }
+    public Thread getThreadEcr() {
+        return threadEcr;
+    }
     public void connect() {
         try {
             this.socketClient = new Socket("localhost", 4444);
