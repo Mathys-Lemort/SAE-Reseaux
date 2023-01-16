@@ -23,7 +23,7 @@ public class ThreadEcr implements Runnable{
                 
             }
             
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println(Couleur.RED_BOLD+"Erreur de connexion"+Couleur.WHITE);
         }
 
