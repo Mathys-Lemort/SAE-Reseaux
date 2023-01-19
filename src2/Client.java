@@ -55,7 +55,8 @@ public class Client {
                 recu = in.readLine();
                 System.out.println(recu);}
                 catch (Exception e) {
-                    printWriter.println(Couleur.RED_BOLD+"Entrez un nombre"+Couleur.WHITE);
+                    System.out.println(Couleur.RED_BOLD+"Entrez un nombre"+Couleur.WHITE);
+                    
                 }
             }
             threadLec = new Thread(new ThreadLec(this));

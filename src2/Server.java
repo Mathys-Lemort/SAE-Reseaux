@@ -17,8 +17,6 @@ public class Server {
     public Server() {
         try {
             this.socketServer= new ServerSocket(4444);
-            Salon salon1 = new Salon(this,"Salon 1");
-            listeSalons.add(salon1);
         } catch (IOException e) {
             e.printStackTrace();
         }

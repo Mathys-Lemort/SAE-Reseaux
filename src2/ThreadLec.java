@@ -7,7 +7,7 @@ public class ThreadLec implements Runnable{
     private Client client;
     private BufferedReader bufferedReader;
     private String message;
-    private boolean decoForcee = false;
+    private boolean decoForcee = true;
     
     public ThreadLec(Client client) {
         this.client = client;
@@ -20,12 +20,13 @@ public class ThreadLec implements Runnable{
             while (! (client.isClosed())) {
                 message = bufferedReader.readLine();
                 if (message.equals(Couleur.RED_BOLD+"Fermeture de la connexion"+Couleur.WHITE)){
-                    decoForcee = true;
+                    decoForcee = false;
                     break;
                 }
                 System.out.println(message);
             }
         } catch (Exception e) {
+            System.out.println("Erreur de connexion");
         }
         finally{
             try {
@@ -34,11 +35,8 @@ public class ThreadLec implements Runnable{
                 e.printStackTrace();
             }
             client.getThreadEcr().interrupt();
-            if (decoForcee){
-                System.out.println(Couleur.PURPLE_BOLD+"Au revoir, appuyez sur entrée pour finir"+Couleur.WHITE);
-            }
-            else{
-            System.out.println(Couleur.PURPLE_BOLD+"Au revoir!"+Couleur.WHITE);}
+            System.out.println(Couleur.PURPLE_BOLD+"Au revoir, appuyez sur entrée pour finir"+Couleur.WHITE);
+            
         }
     }
     

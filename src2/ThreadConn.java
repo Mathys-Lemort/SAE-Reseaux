@@ -36,7 +36,8 @@ public class ThreadConn implements Runnable{
             }
             else{
                 server.getListeNoms().add(nomutil);;
-                valide = true;}
+                valide = true;
+            }
         }
         printWriter.println(Couleur.GREEN_BOLD+"Choisissez un salon (index)"+Couleur.WHITE);
         printWriter.flush();
@@ -60,12 +61,24 @@ public class ThreadConn implements Runnable{
                 if (numSalon.equals("") || !(listeChiffres.contains(numSalon.substring(0,1)))){
                     printWriter.println(Couleur.RED_BOLD+"Entrez un nombre"+Couleur.WHITE);
                     printWriter.flush();
+                    listeS ="";
+                    cpt = 1;
+                    for (Salon salon : server.getListeSalons()){
+                        listeS += cpt+" - "+salon.getNomSalon()+" | ";
+                        cpt++;
+                    }
                     printWriter.println(Couleur.PURPLE_BOLD+listeS+Couleur.WHITE);
                     printWriter.flush();
                 }
                 else if (Integer.parseInt(numSalon)-1 < 0 || Integer.parseInt(numSalon)-1 >= server.getListeSalons().size()) {
                 printWriter.println(Couleur.RED_BOLD+"Salon inexistant ou nombre invalide"+Couleur.WHITE);
                 printWriter.flush();
+                listeS ="";
+                    cpt = 1;
+                    for (Salon salon : server.getListeSalons()){
+                        listeS += cpt+" - "+salon.getNomSalon()+" | ";
+                        cpt++;
+                    }
                 printWriter.println(Couleur.PURPLE_BOLD+listeS+Couleur.WHITE);
                 printWriter.flush();
                 }
@@ -80,6 +93,12 @@ public class ThreadConn implements Runnable{
                 e.printStackTrace();
                 printWriter.println(Couleur.RED_BOLD+"Entrez un nombre"+Couleur.WHITE);
                 printWriter.flush();
+                listeS ="";
+                    cpt = 1;
+                    for (Salon salon : server.getListeSalons()){
+                        listeS += cpt+" - "+salon.getNomSalon()+" | ";
+                        cpt++;
+                    }
                 printWriter.println(Couleur.PURPLE_BOLD+listeS+Couleur.WHITE);
                 printWriter.flush();
             }

@@ -20,7 +20,6 @@ public class ThreadEcr implements Runnable{
                 String input =new BufferedReader(new InputStreamReader(System.in)).readLine();
                 printWriter.println(input);
                 printWriter.flush();
-                
             }
             
         } catch (Exception e) {
