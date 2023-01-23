@@ -1,0 +1,14 @@
+window_sizes 1800 923 450 1344 766 104
+cleanlooks_style
+diagrams
+  active  classdiagram_ref 128003 // src
+    1075 612 80 A4 24 0
+end
+show_stereotypes
+selected class_ref 129155 // ThreadEcr
+open
+  classview_ref 128003 // src2
+  deploymentview_ref 128003 // src2
+  classview_ref 128131 // unknown
+end
+end

@@ -1,0 +1,144 @@
+class Session
+!!!131715.java!!!	Session(inout salon : Salon, inout socketc : Socket, in nomutil : String)
+        this.socketClient = socketc;
+        this.nomutil = nomutil;
+        this.salon = salon;
+        try {
+            this.printWriter = new PrintWriter(socketClient.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+!!!131843.java!!!	getPrintWriter() : PrintWriter
+        return printWriter;
+!!!131971.java!!!	getNomUtil() : String
+        return this.nomutil;
+!!!132099.java!!!	getSalon() : Salon
+        return salon;
+!!!132227.java!!!	setSalon(inout salon : Salon) : void
+        this.salon = salon;
+!!!132355.java!!!	getSocketClient() : Socket
+        return socketClient;
+!!!132483.java!!!	quitter() : void
+        Server server = null;
+        if (this.salon != null) {
+            server = this.salon.getServer();
+            salon.removeSession(this);
+            this.salon = null;
+        }
+        try{
+        PrintWriter printWriter = new PrintWriter(this.getSocketClient().getOutputStream());
+        BufferedReader in = new BufferedReader(new InputStreamReader(this.getSocketClient().getInputStream()));
+        Scanner sc = new Scanner(System.in);
+        printWriter.println(Couleur.YELLOW_BOLD+"Voulez-vous vous déconnecter du serveur(/quit) ou vous reconnecter à un salon(/reco) ?"+Couleur.WHITE);
+        printWriter.flush();
+        String commande = "";
+        while (!(commande.startsWith("/quit")) && !(commande.startsWith("/reco"))){
+            printWriter.println(Couleur.YELLOW_BOLD+"Entrez votre commande"+Couleur.WHITE);
+            printWriter.flush();
+            commande = in.readLine();
+            if (!(commande.startsWith("/quit")) && !(commande.startsWith("/reco"))){
+                printWriter.println(Couleur.RED_BOLD+"Commande inconnue"+Couleur.WHITE);
+                printWriter.flush();
+            }
+            }
+        if (commande.startsWith("/quit")){
+            this.fermer(server);}
+        else if (commande.startsWith("/reco")){
+            server.reconnecter(this);
+            String recu = "";
+            while (!(recu.startsWith(Couleur.PURPLE_BOLD+"Pour"))){
+                try{
+                String numSalon = sc.nextLine();
+                printWriter.println(numSalon);
+                printWriter.flush();
+                recu = in.readLine();
+                System.out.println(recu);
+                recu = in.readLine();
+                System.out.println(recu);}
+                catch (Exception e) {
+                    printWriter.println(Couleur.RED_BOLD+"Entrez un nombre"+Couleur.WHITE);
+                }
+                }
+                }
+            }
+            
+            catch (Exception e) {
+                printWriter.println(Couleur.RED_BOLD+"Erreur de connexion"+Couleur.WHITE);
+            }
+!!!132611.java!!!	fermer(inout server : Server) : void
+        server.getListeNoms().remove(this.nomutil);
+        printWriter.println(Couleur.RED_BOLD+"Fermeture de la connexion"+Couleur.WHITE);
+        printWriter.flush();
+        printWriter.close();
+        try {
+            this.socketClient.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+!!!132739.java!!!	run() : void
+        // read constantly the input stream
+        try {
+            while (true) {
+                String output=new BufferedReader(new InputStreamReader(socketClient.getInputStream())).readLine();
+                if (output.equals("/quit")) {
+                    break;
+                }
+                else if (output.equals("/nbuser")){
+                    printWriter.println(Couleur.BLUE_BOLD+"Il y a " + salon.getSessions().size() + " utilisateurs connectés"+Couleur.WHITE);
+                    printWriter.flush();
+                }
+                else if (output.equals("/users")){
+                    String liste = Couleur.BLUE_BOLD+"Utilisateurs connectés "+salon.getNomsUtils(nomutil)+Couleur.WHITE;
+                    printWriter.println(liste);
+                    printWriter.flush();
+                }
+                else if (output.equals("uptime")){
+                    String temps = Couleur.BLUE_BOLD+salon.getUptime()+Couleur.WHITE;
+                    printWriter.println(temps);
+                    printWriter.flush();
+                }
+                else if (output.equals("/help")){
+                    String liste = Couleur.BLUE_BOLD+"Commandes disponibles : /quit, /nbuser, /users, uptime, /help, @nomutil message"+Couleur.WHITE;
+                    printWriter.println(liste);
+                    printWriter.flush();
+                }
+                else if (output.startsWith("@")){
+                    String[] parts = output.split(" ", 2);
+                    String message = parts[1];
+                    String send = this.nomutil;
+                    String nom = parts[0].substring(1);
+                    boolean trouve = false;
+                    for (Session session : salon.getSessions()){
+                        if (nom.equals(session.getNomUtil())){
+                        session.getPrintWriter().println(Couleur.YELLOW_BOLD+"[message privé de "+send + "] " + message+Couleur.WHITE);
+                        session.getPrintWriter().flush();
+                        trouve = true;
+                        }
+                    }
+                    if (!trouve){
+                        printWriter.println(Couleur.RED_BOLD+"Utilisateur introuvable"+Couleur.WHITE);
+                        printWriter.flush();
+                    }
+                    }
+                else if (output.startsWith("/")){
+                    printWriter.println(Couleur.RED_BOLD+"Commande inconnue"+Couleur.WHITE);
+                    printWriter.flush();
+                }
+                else if (output.equals("") || output.equals(" ")){
+                    printWriter.println(Couleur.RED_BOLD+"Message vide"+Couleur.WHITE);
+                    printWriter.flush();
+                }
+                else{
+                String message = Couleur.GREEN_BOLD+"["+this.nomutil + "] " +Couleur.WHITE+ output;
+                for (Session session : salon.getSessions()){
+                    if (!(this.nomutil.equals(session.getNomUtil()))){
+                    session.getPrintWriter().println(message);
+                    session.getPrintWriter().flush();}
+                }}
+            }
+        } catch (Exception e) {
+            
+        }
+        finally {
+            this.quitter();
+        }

@@ -1,0 +1,42 @@
+class Salon
+!!!128899.java!!!	Salon(inout server : Server, in nomSalon : String)
+        this.sessions = new ArrayList<Session>();
+        this.server = server;
+        this.nomSalon = nomSalon;
+        this.nbutil = 0;
+        this.heureDeb = Instant.now();
+        
+!!!129027.java!!!	getSessions() : Session
+        return sessions;
+!!!129155.java!!!	getNomSalon() : String
+        return nomSalon;
+!!!129283.java!!!	ajoutSession(inout session : Session) : void
+        sessions.add(session);
+        nbutil++;
+!!!129411.java!!!	getNomsUtils(in nomutil : String) : String
+        String noms = "";
+        for (Session session : sessions){
+            noms += " | "+session.getNomUtil();
+        }
+        return noms;
+!!!129539.java!!!	getServer() : Server
+        return server;
+!!!129667.java!!!	getNbUtil() : int
+        return nbutil;
+!!!129795.java!!!	getUptime() : String
+        Instant end = Instant.now();
+        Duration duration = Duration.between(heureDeb, end);
+        // secondes modulo 60
+        long sec = duration.getSeconds() % 60;
+        String uptime = duration.toHours()+":"+duration.toMinutes()+":"+sec;
+        return uptime;
+!!!129923.java!!!	removeSession(inout session : Session) : void
+        sessions.remove(session);
+        nbutil--;
+!!!130051.java!!!	fermer() : void
+        for (Session session : sessions){
+            session.getPrintWriter().println(Couleur.RED_BOLD+"Le salon a été fermé par l'administrateur");
+            session.getPrintWriter().flush();
+            session.fermer(this.server);
+        }
+        sessions.clear();
