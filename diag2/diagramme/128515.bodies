@@ -1,0 +1,70 @@
+class Server
+!!!130179.java!!!	Server()
+        try {
+            this.socketServer= new ServerSocket(4444);
+            Salon salon1 = new Salon(this,"Salon 1");
+            listeSalons.add(salon1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+!!!130307.java!!!	ajouterClient(inout socketClient : Socket) : void
+        this.connEnCours++;
+        Thread threadConn = new Thread(new ThreadConn(this,socketClient));
+        this.listeThreads.add(threadConn);
+        threadConn.start();
+!!!130435.java!!!	getConnEnCours() : int
+        return connEnCours;
+!!!130563.java!!!	ajtConnEnCours() : void
+        connEnCours++;
+!!!130691.java!!!	finConnEnCours() : void
+        connEnCours--;
+!!!130819.java!!!	getListeNoms() : List<String>
+        return listeNoms;
+!!!130947.java!!!	getListeSalons() : Salon
+        return listeSalons;
+!!!131075.java!!!	ouvert() : boolean
+        return !(socketServer.isClosed());
+!!!131203.java!!!	fermer() : void
+        try {
+            for (Thread thread : listeThreads) {
+                thread.interrupt();
+            }
+            for (Salon salon : listeSalons) {
+                salon.fermer();
+            }
+            socketServer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+!!!131331.java!!!	reconnecter(inout session : Session) : void
+        Thread threadConn = new Thread(new ThreadReconn(this,session));
+        this.listeThreads.add(threadConn);
+        threadConn.start();
+!!!131459.java!!!	demarrer() : void
+        Thread ecoute = new Thread(new ThreadEcouteServ(this));
+        ecoute.start();
+        while (!socketServer.isClosed()){
+            try{
+                if (socketServer.isClosed()) {
+                    break;
+                }
+                Socket socketClient = socketServer.accept();
+                System.out.println(Couleur.BLUE_BOLD+"Connexion d’un client"+Couleur.WHITE);
+                while (connEnCours >= 3){
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                ajouterClient(socketClient);
+            }
+            catch (IOException e) {
+                break;
+                }
+            }
+        
+!!!131587.java!!!	main(inout args : String [[]]) : void
+            Server server = new Server();
+            server.demarrer();
+        

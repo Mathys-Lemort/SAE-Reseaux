@@ -1,0 +1,29 @@
+class ThreadLec
+!!!133635.java!!!	ThreadLec(inout client : Client)
+        this.client = client;
+!!!133763.java!!!	run() : void
+        try {
+            bufferedReader = new BufferedReader(new InputStreamReader(this.client.getSocketClient().getInputStream()));
+            while (! (client.isClosed())) {
+                message = bufferedReader.readLine();
+                if (message.equals(Couleur.RED_BOLD+"Fermeture de la connexion"+Couleur.WHITE)){
+                    decoForcee = true;
+                    break;
+                }
+                System.out.println(message);
+            }
+        } catch (Exception e) {
+        }
+        finally{
+            try {
+                client.getSocketClient().close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            client.getThreadEcr().interrupt();
+            if (decoForcee){
+                System.out.println(Couleur.PURPLE_BOLD+"Au revoir, appuyez sur entrée pour finir"+Couleur.WHITE);
+            }
+            else{
+            System.out.println(Couleur.PURPLE_BOLD+"Au revoir!"+Couleur.WHITE);}
+        }

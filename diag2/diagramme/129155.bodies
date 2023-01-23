@@ -1,0 +1,18 @@
+class ThreadEcr
+!!!133379.java!!!	ThreadEcr(inout client : Client)
+        this.client = client;
+!!!133507.java!!!	run() : void
+        // read constantly the input stream
+        try {
+            PrintWriter printWriter = new PrintWriter(this.client.getSocketClient().getOutputStream());
+            while (!(client.isClosed())){
+                String input =new BufferedReader(new InputStreamReader(System.in)).readLine();
+                printWriter.println(input);
+                printWriter.flush();
+                
+            }
+            
+        } catch (Exception e) {
+            System.out.println(Couleur.RED_BOLD+"Erreur de connexion"+Couleur.WHITE);
+        }
+
